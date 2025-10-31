@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem PKL - Halaman Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
+        </svg>
+        <h1 class="text-lg font-semibold">Sistem PKL - Dashboard Admin</h1>
+      </div>
+      <p class="text-sm">Selamat datang, <span class="font-medium">Administrator</span></p>
+    </header>
+
+    <div class="flex">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white min-h-screen border-r">
+        <nav class="p-4">
+          <p class="text-gray-400 uppercase text-xs mb-2">Administrasi</p>
+          <ul class="space-y-2 mb-6">
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Dashboard Admin
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md bg-blue-100 text-blue-700 font-medium">
+                <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+                <span class="ml-2">Manajemen Siswa</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Dokumen Siswa
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="user-check" class="w-4 h-4 mr-2"></i> Pembimbing PKL
+              </a>
+            </li>
+          </ul>
+
+          <p class="text-gray-400 uppercase text-xs mb-2">Monitoring</p>
+          <ul class="space-y-2 mb-6">
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Lokasi PKL</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="file-bar-chart" class="w-4 h-4 mr-2"></i> Laporan Siswa</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Statistik</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="building-2" class="w-4 h-4 mr-2"></i> Perusahaan Partner</a></li>
+          </ul>
+
+          <a href="#" class="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 rounded-md font-medium">
+            <i data-lucide="log-out" class="w-4 h-4 mr-2"></i> Keluar
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Konten Utama -->
+      <main class="flex-1 p-6">
+        <!-- Header Manajemen -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6 flex justify-between items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+              <h2 class="text-lg font-semibold text-gray-800">Manajemen Data Siswa</h2>
+            </div>
+            <p class="text-sm text-gray-500">
+              Kelola data siswa PKL bidang Teknologi Jaringan Komputer & Pemrograman
+            </p>
+          </div>
+        </div>
+
+        <!-- Pencarian + Tombol Tambah -->
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-4 flex justify-between items-center">
+          <div class="relative w-[78%]"> <!-- diperlebar dari 2/3 -->
+            <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+            <input
+              type="text"
+              placeholder="Cari siswa berdasarkan nama, NIS, kelas, lokasi, atau spesialisasi..."
+              class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+          </div>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm flex items-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Tambah Siswa
+          </button>
+        </div>
+
+        <!-- Tabel Data -->
+        <div class="bg-white rounded-lg shadow-sm overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-gray-50 text-gray-600">
+              <tr>
+                <th class="py-3 px-4 text-left">NIS</th>
+                <th class="py-3 px-4 text-left">Siswa</th>
+                <th class="py-3 px-4 text-left">Lokasi PKL</th>
+                <th class="py-3 px-4 text-left">Periode</th>
+                <th class="py-3 px-4 text-left">Status</th>
+                <th class="py-3 px-4 text-left">Spesialisasi</th>
+                <th class="py-3 px-4 text-left">Pembimbing</th>
+                <th class="py-3 px-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">2023001</td>
+                <td class="px-4 py-3 font-medium text-gray-900">
+                  Angga
+                  <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full ml-1">XII TJKT 1</span>
+                </td>
+                <td class="px-4 py-3">PT Telkom Indonesia</td>
+                <td class="px-4 py-3">1/6/2023 s/d 31/8/2023</td>
+                <td class="px-4 py-3">
+                  <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">✔ Aktif</span>
+                </td>
+                <td class="px-4 py-3">Teknologi Jaringan</td>
+                <td class="px-4 py-3">Budi Santoso</td>
+                <td class="px-4 py-3 text-center space-x-2">
+                  <button class="text-blue-500 hover:text-blue-700" title="Edit">
+                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-red-500 hover:text-red-700" title="Hapus">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">2023002</td>
+                <td class="px-4 py-3 font-medium text-gray-900">
+                    Jamaluddin <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full ml-1">XII TJKT 1</span>
+                </td>
+                <td class="px-4 py-3">PT Indosat Ooredoo</td>
+                <td class="px-4 py-3">1/6/2023 s/d 31/8/2023</td>
+                <td class="px-4 py-3">
+                    <span class="bg-[#1E40AF]/20 text-[#1E40AF] px-3 py-1 rounded-full text-xs font-medium">✔ Selesai</span>
+                </td>
+                <td class="px-4 py-3">Pemrograman</td>
+                <td class="px-4 py-3">Agus Saifudin</td>
+                <td class="px-4 py-3 text-center space-x-2">
+                    <button class="text-blue-500 hover:text-blue-700" title="Edit">
+                        <i data-lucide="edit-2" class="w-4 h-4"></i>
+                    </button>
+                    <button class="text-red-500 hover:text-red-700" title="Hapus">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">2023004</td>
+                <td class="px-4 py-3 font-medium text-gray-900">
+                  Konma
+                  <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full ml-1">XII TJKT 2</span>
+                </td>
+                <td class="px-4 py-3">PT Link Net</td>
+                <td class="px-4 py-3">1/7/2023 s/d 1/10/2023</td>
+                <td class="px-4 py-3">
+                  <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">✖ Belum Mulai</span>
+                </td>
+                <td class="px-4 py-3">Teknologi Jaringan</td>
+                <td class="px-4 py-3">Doni Setiawan</td>
+                <td class="px-4 py-3 text-center space-x-2">
+                  <button class="text-blue-500 hover:text-blue-700">
+                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-red-500 hover:text-red-700">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
