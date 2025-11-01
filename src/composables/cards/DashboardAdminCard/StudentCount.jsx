@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GraduationCap } from "lucide-react";
-import { api } from "../../hooks/hooks";
+import { api } from "../../hooks/UseApi";
 
 function StudentCount() {
   const axios = api();

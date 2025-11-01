@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../../hooks/hooks";
+import { api } from "../../hooks/UseApi";
 
 export default function ClassCard() {
   const [students, setStudents] = useState([]);

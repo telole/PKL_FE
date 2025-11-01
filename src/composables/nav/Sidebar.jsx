@@ -9,7 +9,7 @@ import {
   Building2,
   LogOut
 } from "lucide-react";
-import { api } from "../hooks/hooks";
+import { api } from "../hooks/UseApi";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 function Sidebar() {

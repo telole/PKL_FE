@@ -1,6 +1,6 @@
 import { Link } from "lucide-react";
 import { useEffect, useState } from "react";
-import { api } from "../../hooks/hooks";
+import { api } from "../../hooks/UseApi";
 
 export default function NetworkCard() {
   const [topCompanies, setTopCompanies] = useState([]);

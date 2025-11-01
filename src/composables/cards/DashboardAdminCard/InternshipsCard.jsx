@@ -1,5 +1,5 @@
 import { Zap } from "lucide-react";
-import { api } from "../../hooks/hooks";
+import { api } from "../../hooks/UseApi";
 import { useEffect, useState } from "react";
 
 export default function InternShips() {
