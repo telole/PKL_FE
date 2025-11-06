@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../composables/hooks/UseApi";
+import { useToast } from "../composables/hooks/useToast";
 import MainPanel from "../composables/nav/MainPanel";
 import Sidebar from "../composables/nav/Sidebar";
 import {
@@ -10,16 +11,14 @@ import {
   Trash2,
   X,
   Pencil,
-  CheckCircle2,
-  XCircle,
 } from "lucide-react";
 
 export default function MainDocument() {
   const [data, setData] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [notif, setNotif] = useState({ show: false, type: "", message: "" });
   const axios = api();
+  const { showNotif } = useToast();
 
   // --- Fetch data utama ---
   const fetchData = async () => {
@@ -35,11 +34,7 @@ export default function MainDocument() {
     fetchData();
   }, []);
 
-  // --- Notifikasi sederhana ---
-  const showNotif = (type, message) => {
-    setNotif({ show: true, type, message });
-    setTimeout(() => setNotif({ show: false, type: "", message: "" }), 2500);
-  };
+  // Notifikasi menggunakan useToast
 
   // --- Download dokumen ---
   const handleDownload = async (doc) => {
@@ -82,10 +77,8 @@ export default function MainDocument() {
         status: selectedDoc.status,
       });
 
-      // Tutup modal
       setIsModalOpen(false);
 
-      // Update langsung di tabel tanpa reload
       setData((prev) =>
         prev.map((item) =>
           item.id === selectedDoc.id
@@ -94,7 +87,6 @@ export default function MainDocument() {
         )
       );
 
-      // Re-fetch untuk sinkronisasi backend
       fetchData();
       showNotif("success", "Status dokumen berhasil diperbarui.");
     } catch (err) {
@@ -108,21 +100,7 @@ export default function MainDocument() {
       {/* Panel utama di atas semua */}
       <MainPanel />
 
-      {/* Notifikasi */}
-      {notif.show && (
-        <div
-          className={`fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-sm text-white ${
-            notif.type === "success" ? "bg-green-600" : "bg-red-600"
-          }`}
-        >
-          {notif.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5" />
-          ) : (
-            <XCircle className="w-5 h-5" />
-          )}
-          <span>{notif.message}</span>
-        </div>
-      )}
+      {/* Notifikasi dipindah ke useToast */}
 
       {/* Layout utama */}
       <div className="min-h-screen bg-gray-100 flex">
