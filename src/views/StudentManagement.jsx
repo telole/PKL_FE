@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+
 import Sidebar from "../composables/nav/Sidebar";
 import MainPanel from "../composables/nav/MainPanel";
 import StudentTableManagement from "../composables/cards/StudentManagementCard/DataTableCardStudent";

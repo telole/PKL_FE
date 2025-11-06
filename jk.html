@@ -65,9 +65,7 @@
         </nav>
       </aside>
 
-      <!-- Konten Utama -->
       <main class="flex-1 p-6">
-        <!-- Header Halaman -->
         <div class="mb-6">
           <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <i data-lucide="folder-open" class="w-6 h-6 text-blue-600"></i>
@@ -77,18 +75,14 @@
             Kelola, verifikasi, dan pantau semua dokumen yang diunggah oleh siswa selama kegiatan PKL berlangsung.
           </p>
         </div>
-
-    <!-- Filter & Search -->
     <div class="bg-white rounded-lg shadow-sm p-4 mb-6 flex flex-wrap items-center gap-3 justify-between">
         <div class="flex items-center gap-3 flex-1">
-            <!-- Search bar panjang -->
             <div class="relative flex-1">
                  <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
                 <input type="text" placeholder="Cari dokumen siswa..."
                     class="pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 w-full"/>
             </div>
 
-            <!-- Dropdown tipe dokumen -->
             <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 min-w-[130px]">
                 <option>Semua Tipe</option>
                 <option>PDF</option>
@@ -96,7 +90,6 @@
                 <option>XLSX</option>
             </select>
 
-            <!-- Dropdown status -->
             <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 min-w-[150px]">
                 <option>Semua Status</option>
                 <option>Disetujui</option>
@@ -105,14 +98,12 @@
             </select>
         </div>
 
-            <!-- Tombol upload -->
             <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md flex items-center gap-2 text-sm">
                 <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Dokumen
             </button>
     </div>
 
 
-        <!-- Tabel Dokumen -->
         <div class="bg-white rounded-lg shadow-sm overflow-x-auto">
           <table class="w-full text-sm border-collapse">
             <thead class="bg-gray-50 text-gray-600 border-b">
@@ -126,7 +117,6 @@
             </thead>
 
             <tbody class="divide-y">
-              <!-- Row 1 -->
               <tr class="hover:bg-gray-50">
                 <td class="px-4 py-3 flex items-center gap-3">
                   <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
@@ -144,78 +134,6 @@
                   <i data-lucide="check-circle" class="w-4 h-4"></i>
                   <span class="text-xs font-medium">Disetujui</span>
                 </td>
-                <!-- Aksi: pastikan berada di kolom terakhir dan terpusat -->
-                <td class="px-4 py-3">
-                  <div class="flex items-center justify-center gap-3">
-                    <button title="Lihat" class="text-blue-500 hover:text-blue-700">
-                      <i data-lucide="eye" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Download" class="text-green-500 hover:text-green-700">
-                      <i data-lucide="download" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Hapus" class="text-red-500 hover:text-red-700">
-                      <i data-lucide="trash-2" class="w-5 h-5"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 2 -->
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 flex items-center gap-3">
-                  <i data-lucide="file" class="w-6 h-6 text-blue-600"></i>
-                  <div>
-                    <p class="font-medium text-gray-900">Surat Keterangan PKL Jamal.docx</p>
-                    <p class="text-xs text-gray-500">Surat resmi kegiatan PKL dari pembimbing industri.</p>
-                  </div>
-                </td>
-                <td class="px-4 py-3">
-                  <p class="font-medium text-gray-800">Jamaluddin</p>
-                  <p class="text-xs text-gray-500">XII TJKT 1</p>
-                </td>
-                <td class="px-4 py-3">10 September 2023</td>
-                <td class="px-4 py-3 flex items-center gap-1 text-yellow-600">
-                  <i data-lucide="clock" class="w-4 h-4"></i>
-                  <span class="text-xs font-medium">Menunggu</span>
-                </td>
-                <!-- Aksi baris 2 -->
-                <td class="px-4 py-3">
-                  <div class="flex items-center justify-center gap-3">
-                    <button title="Lihat" class="text-blue-500 hover:text-blue-700">
-                      <i data-lucide="eye" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Download" class="text-green-500 hover:text-green-700">
-                      <i data-lucide="download" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Setujui" class="text-green-600 hover:text-green-800">
-                      <i data-lucide="check" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Tolak" class="text-red-600 hover:text-red-800">
-                      <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-
-              <!-- Row 3 -->
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 flex items-center gap-3">
-                  <i data-lucide="file-spreadsheet" class="w-6 h-6 text-blue-600"></i>
-                  <div>
-                    <p class="font-medium text-gray-900">Jurnal Harian Konma.xlsx</p>
-                    <p class="text-xs text-gray-500">Rekap tugas dan aktivitas harian siswa selama PKL.</p>
-                  </div>
-                </td>
-                <td class="px-4 py-3">
-                  <p class="font-medium text-gray-800">Konma Rasyid</p>
-                  <p class="text-xs text-gray-500">XII TJKT 2</p>
-                </td>
-                <td class="px-4 py-3">8 September 2023</td>
-                <td class="px-4 py-3 flex items-center gap-1 text-red-600">
-                  <i data-lucide="x-circle" class="w-4 h-4"></i>
-                  <span class="text-xs font-medium">Ditolak</span>
-                </td>
-                <!-- Aksi baris 3 -->
                 <td class="px-4 py-3">
                   <div class="flex items-center justify-center gap-3">
                     <button title="Lihat" class="text-blue-500 hover:text-blue-700">

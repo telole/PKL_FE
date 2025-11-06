@@ -15,7 +15,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 function Sidebar() {
   const axios = api();
   const navigate = useNavigate();
-  const location = useLocation(); // 👈 ambil path aktif
+  const location = useLocation();
   const token = localStorage.getItem("token");
 
   function handleLogout() {
@@ -90,9 +90,9 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              to="/documents"
+              to="/admin/document"
               className={`flex items-center px-3 py-2 rounded-md ${
-                isActive("/documents")
+                isActive("/admin/document")
                   ? "bg-blue-100 text-blue-700 font-medium"
                   : "hover:bg-blue-100 text-gray-700"
               }`}
