@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../composables/hooks/UseApi";
 import { useToast } from "../composables/hooks/useToast";
+import { useSetError } from "../composables/hooks/SetError";
+import { useOpenModal } from "../composables/hooks/useOpenModal";
 import MainPanel from "../composables/nav/MainPanel";
 import Sidebar from "../composables/nav/Sidebar";
 import {
@@ -15,18 +17,17 @@ import {
 
 export default function MainDocument() {
   const [data, setData] = useState([]);
-  const [selectedDoc, setSelectedDoc] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen: isModalOpen, data: selectedDoc, open, close, setData: setSelectedDoc } = useOpenModal();
   const axios = api();
   const { showNotif } = useToast();
+  const { setError } = useSetError();
 
-  // --- Fetch data utama ---
   const fetchData = async () => {
     try {
       const res = await axios.get(`reportsa?_=${Date.now()}`);
       setData(res.data.data || []);
     } catch (err) {
-      console.log(err.response?.data);
+      setError(err, "Gagal memuat data dokumen.");
     }
   };
 
@@ -34,9 +35,7 @@ export default function MainDocument() {
     fetchData();
   }, []);
 
-  // Notifikasi menggunakan useToast
 
-  // --- Download dokumen ---
   const handleDownload = async (doc) => {
     try {
       const res = await axios.get(`reportsa/download/${doc.id}`, {
@@ -50,22 +49,19 @@ export default function MainDocument() {
       window.URL.revokeObjectURL(url);
       showNotif("success", "Dokumen berhasil diunduh.");
     } catch (err) {
-      console.error(err);
-      showNotif("error", "Gagal mengunduh dokumen.");
+      setError(err, "Gagal mengunduh dokumen.");
     }
   };
 
-  // --- Hapus dokumen ---
   const handleDelete = async (id) => {
     if (window.confirm("Yakin ingin menghapus dokumen ini?")) {
       try {
         await axios.delete(`reportsa/${id}`);
         fetchData();
         showNotif("success", "Dokumen berhasil dihapus.");
-      } catch (err) {
-        console.error(err);
-        showNotif("error", "Gagal menghapus dokumen.");
-      }
+    } catch (err) {
+      setError(err, "Gagal menghapus dokumen.");
+    }
     }
   };
 
@@ -77,7 +73,7 @@ export default function MainDocument() {
         status: selectedDoc.status,
       });
 
-      setIsModalOpen(false);
+      close();
 
       setData((prev) =>
         prev.map((item) =>
@@ -90,8 +86,7 @@ export default function MainDocument() {
       fetchData();
       showNotif("success", "Status dokumen berhasil diperbarui.");
     } catch (err) {
-      console.error(err.response?.data);
-      showNotif("error", "Gagal memperbarui status dokumen.");
+      setError(err, "Gagal memperbarui status dokumen.");
     }
   };
 
@@ -191,9 +186,7 @@ export default function MainDocument() {
                           <td className="px-4 py-3 text-center">
                             <div className="flex items-center justify-center gap-3">
                               <button
-                                onClick={() =>
-                                  setSelectedDoc(d) || setIsModalOpen(true)
-                                }
+                                onClick={() => open(d)}
                                 title="Edit Status"
                                 className="text-yellow-500 hover:text-yellow-700"
                               >
@@ -237,7 +230,7 @@ export default function MainDocument() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
             <button
-              onClick={() => setIsModalOpen(false)}
+              onClick={close}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
             >
               <X className="w-5 h-5" />
@@ -280,7 +273,7 @@ export default function MainDocument() {
               <div className="flex justify-end gap-3 mt-5">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={close}
                   className="px-4 py-2 text-sm bg-gray-200 rounded-md hover:bg-gray-300"
                 >
                   Batal

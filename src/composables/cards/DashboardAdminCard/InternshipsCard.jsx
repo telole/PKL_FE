@@ -1,10 +1,12 @@
 import { Zap } from "lucide-react";
 import { api } from "../../hooks/UseApi";
 import { useEffect, useState } from "react";
+import { useSetError } from "../../hooks/SetError";
 
 export default function InternShips() {
     const axios = api();
     const [data, setData] = useState([]);
+    const { setError } = useSetError();
 
 
 
@@ -12,7 +14,7 @@ export default function InternShips() {
       axios.get('intern').then((res) => {
           setData(res.data.data)
       }).catch((err) => {
-          console.log(err.response?.json)
+          setError(err, "Gagal memuat data PKL aktif.");
       });
     }, [])
 

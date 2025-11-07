@@ -1,6 +1,7 @@
   import { useEffect, useState } from "react";
   import { useNavigate } from "react-router-dom";
   import { api } from "../../hooks/UseApi";
+  import { useSetError } from "../../hooks/SetError";
   import { Plus, Search } from "lucide-react";
 
   export default function StudentTableManagement() {
@@ -10,6 +11,7 @@
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const axios = api();
+    const { setError: handleSetError } = useSetError();
 
     useEffect(() => {
       axios
@@ -21,7 +23,7 @@
           console.log(students);
         })
         .catch((err) => {
-          console.error(err.response?.data);
+          handleSetError(err, "Gagal memuat data siswa.");
           setError(err.response?.data || "Error fetching Data");
         });
     }, []);

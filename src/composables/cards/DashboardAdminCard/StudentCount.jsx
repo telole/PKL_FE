@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { GraduationCap } from "lucide-react";
 import { api } from "../../hooks/UseApi";
+import { useSetError } from "../../hooks/SetError";
 
 function StudentCount() {
   const axios = api();
   const [data, setData] = useState([]);
+  const { setError } = useSetError();
 
   useEffect(() => {
     axios
@@ -14,7 +16,7 @@ function StudentCount() {
         console.log(res.data.student);
       })
       .catch((err) => {
-        console.log(err.response?.data);
+        setError(err, "Gagal memuat data siswa.");
       });
   }, []); 
 

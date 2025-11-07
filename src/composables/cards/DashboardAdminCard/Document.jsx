@@ -1,16 +1,18 @@
 import { AlertCircle } from "lucide-react";
 import { api } from "../../hooks/UseApi";
 import { useEffect, useState } from "react";
+import { useSetError } from "../../hooks/SetError";
 
 export default function Document() {
     const axios = api();
     const [data, setData] = useState([]);
+    const { setError } = useSetError();
 
     useEffect(() => {
       axios.get('reportsa').then((res) => {
           setData(res.data.data)
       }).catch((err) => {
-          console.log(err)
+          setError(err, "Gagal memuat data dokumen.");
       });
     }, [])
     return(

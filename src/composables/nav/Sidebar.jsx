@@ -10,6 +10,7 @@ import {
   LogOut
 } from "lucide-react";
 import { api } from "../hooks/UseApi";
+import { useSetError } from "../hooks/SetError";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 function Sidebar() {
@@ -17,6 +18,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
+  const { setError } = useSetError();
 
   function handleLogout() {
     const confirmLogout = window.confirm("Logout sekarang?");
@@ -40,7 +42,7 @@ function Sidebar() {
         navigate("/");
       })
       .catch((err) => {
-        console.error("Logout gagal:", err.response?.data || err.message);
+        setError(err, "Gagal melakukan logout.");
       });
   }
 
@@ -103,9 +105,9 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              to="/supervisors"
+              to="/admin/teacher"
               className={`flex items-center px-3 py-2 rounded-md ${
-                isActive("/supervisors")
+                isActive("/admin/teacher")
                   ? "bg-blue-100 text-blue-700 font-medium"
                   : "hover:bg-blue-100 text-gray-700"
               }`}
@@ -120,28 +122,15 @@ function Sidebar() {
         <ul className="space-y-2 mb-6">
           <li>
             <Link
-              to="/locations"
+              to="/admin/locations"
               className={`flex items-center px-3 py-2 rounded-md ${
-                isActive("/locations")
+                isActive("/admin/locations")
                   ? "bg-blue-100 text-blue-700 font-medium"
                   : "hover:bg-blue-100 text-gray-700"
               }`}
             >
               <MapPin className="w-4 h-4 mr-2" />
               Lokasi PKL
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/reports"
-              className={`flex items-center px-3 py-2 rounded-md ${
-                isActive("/reports")
-                  ? "bg-blue-100 text-blue-700 font-medium"
-                  : "hover:bg-blue-100 text-gray-700"
-              }`}
-            >
-              <FileBarChart className="w-4 h-4 mr-2" />
-              Laporan Siswa
             </Link>
           </li>
           <li>

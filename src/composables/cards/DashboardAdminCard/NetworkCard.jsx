@@ -1,10 +1,12 @@
 import { Link } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../hooks/UseApi";
+import { useSetError } from "../../hooks/SetError";
 
 export default function NetworkCard() {
   const [topCompanies, setTopCompanies] = useState([]);
   const axios = api();
+  const { setError } = useSetError();
 
   useEffect(() => {
     axios
@@ -27,7 +29,7 @@ export default function NetworkCard() {
         setTopCompanies(sorted);
       })
       .catch((err) => {
-        console.error("Error fetching data:", err.response?.data || err);
+        setError(err, "Gagal memuat data perusahaan.");
       });
   }, []);
 

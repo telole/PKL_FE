@@ -26,7 +26,7 @@ export function useAuth() {
     } finally {
       setLoading(false);
     }
-  }, [axios]);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");

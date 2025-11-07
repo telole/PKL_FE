@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistem PKL - Manajemen Dokumen Siswa</title>
+    <title>Sistem PKL - Lokasi PKL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
   <body class="bg-gray-100 font-sans">
+
     <!-- Header -->
     <header class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow">
       <div class="flex items-center gap-2">
@@ -27,36 +28,22 @@
         <nav class="p-4">
           <p class="text-gray-400 uppercase text-xs mb-2">Administrasi</p>
           <ul class="space-y-2 mb-6">
-            <li>
-              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Dashboard Admin
-              </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
-                <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
-                <span class="ml-2">Manajemen Siswa</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center px-3 py-2 rounded-md bg-blue-100 text-blue-700 font-medium">
-                <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
-                <span class="ml-3">Dokumen Siswa</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
-                <i data-lucide="user-check" class="w-4 h-4 mr-2"></i> Pembimbing PKL
-              </a>
-            </li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Dashboard Admin</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="users" class="w-4 h-4 mr-2"></i> Manajemen Siswa</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Dokumen Siswa</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="user-check" class="w-4 h-4 mr-2"></i> Pembimbing PKL</a></li>
           </ul>
 
           <p class="text-gray-400 uppercase text-xs mb-2">Monitoring</p>
           <ul class="space-y-2 mb-6">
-            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Lokasi PKL</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="file-bar-chart" class="w-4 h-4 mr-2"></i> Laporan Siswa</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Statistik</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="building-2" class="w-4 h-4 mr-2"></i> Perusahaan Partner</a></li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md bg-blue-100 text-blue-700 font-medium">
+                <i data-lucide="map-pin" class="w-4 h-4 mr-2 text-blue-600"></i> Lokasi PKL
+              </a>
+            </li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="file-bar-chart" class="w-4 h-4 mr-2"></i> Laporan Siswa</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Statistik</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="building-2" class="w-4 h-4 mr-2"></i> Perusahaan Partner</a></li>
           </ul>
 
           <a href="#" class="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 rounded-md font-medium">
@@ -65,97 +52,121 @@
         </nav>
       </aside>
 
-      <main class="flex-1 p-6">
+      <!-- Main Content -->
+      <main class="flex-1 p-8">
         <div class="mb-6">
-          <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-            <i data-lucide="folder-open" class="w-6 h-6 text-blue-600"></i>
-            Manajemen Dokumen Siswa
-          </h2>
-          <p class="text-gray-500 text-sm mt-1">
-            Kelola, verifikasi, dan pantau semua dokumen yang diunggah oleh siswa selama kegiatan PKL berlangsung.
-          </p>
-        </div>
-    <div class="bg-white rounded-lg shadow-sm p-4 mb-6 flex flex-wrap items-center gap-3 justify-between">
-        <div class="flex items-center gap-3 flex-1">
-            <div class="relative flex-1">
-                 <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
-                <input type="text" placeholder="Cari dokumen siswa..."
-                    class="pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 w-full"/>
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col items-center justify-center">
+                    <i data-lucide="map-pin" class="w-10 h-10 text-blue-600"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800">Manajemen Lokasi PKL</h2>
+                    <p class="text-gray-500 text-sm">Detail lokasi, kontak, pembimbing, dan siswa di tempat PKL</p>
+                </div>
             </div>
-
-            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 min-w-[130px]">
-                <option>Semua Tipe</option>
-                <option>PDF</option>
-                <option>DOCX</option>
-                <option>XLSX</option>
-            </select>
-
-            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 min-w-[150px]">
-                <option>Semua Status</option>
-                <option>Disetujui</option>
-                <option>Menunggu</option>
-                <option>Ditolak</option>
-            </select>
         </div>
 
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md flex items-center gap-2 text-sm">
-                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Dokumen
-            </button>
-    </div>
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <!-- Header -->
+          <div class="flex justify-between items-start p-6">
+            <div class="flex items-center gap-3">
+              <i data-lucide="building-2" class="w-10 h-10 text-blue-600"></i>
+              <div>
+                <h3 id="namaPerusahaan" class="text-lg font-semibold text-gray-800" contenteditable="false">PT Telkom Indonesia</h3>
+                <p id="deskripsiPerusahaan" class="text-gray-500 text-sm" contenteditable="false">Perusahaan telekomunikasi terbesar di Indonesia</p>
+              </div>
+            </div>
+            <div class="flex gap-4 items-center">
+              <button id="editBtn" class="text-blue-600 hover:text-blue-800"><i data-lucide="edit-3" class="w-6 h-6"></i></button>
+              <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-6 h-6"></i></button>
+            </div>
+          </div>
 
+          <!-- Alamat -->
+          <div class="bg-gray-50 flex items-center px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Alamat</p>
+            <p id="alamat" class="text-gray-800 w-2/3" contenteditable="false">Jl. Jendral Sudirman No.123, Jakarta</p>
+          </div>
 
-        <div class="bg-white rounded-lg shadow-sm overflow-x-auto">
-          <table class="w-full text-sm border-collapse">
-            <thead class="bg-gray-50 text-gray-600 border-b">
-              <tr>
-                <th class="py-3 px-4 text-left font-medium">Dokumen</th>
-                <th class="py-3 px-4 text-left font-medium">Siswa</th>
-                <th class="py-3 px-4 text-left font-medium">Tanggal Upload</th>
-                <th class="py-3 px-4 text-left font-medium">Status</th>
-                <th class="py-3 px-4 text-center font-medium">Aksi</th>
-              </tr>
-            </thead>
+          <!-- Kontak -->
+          <div class="bg-white flex items-start px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Kontak</p>
+            <div class="w-2/3 text-gray-800 space-y-1">
+              <p contenteditable="false" id="email">Email: info@telkom.co.id</p>
+              <p contenteditable="false" id="telepon">Telepon: (021) 808080</p>
+              <p contenteditable="false" id="website">Website: www.telkom.co.id</p>
+            </div>
+          </div>
 
-            <tbody class="divide-y">
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 flex items-center gap-3">
-                  <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
-                  <div>
-                    <p class="font-medium text-gray-900">Laporan PKL Angga.pdf</p>
-                    <p class="text-xs text-gray-500">Laporan kegiatan mingguan selama PKL di CV. Teknokreatif.</p>
-                  </div>
-                </td>
-                <td class="px-4 py-3">
-                  <p class="font-medium text-gray-800">Angga Prasetyo</p>
-                  <p class="text-xs text-gray-500">XII TJKT 1</p>
-                </td>
-                <td class="px-4 py-3">12 September 2023</td>
-                <td class="px-4 py-3 flex items-center gap-1 text-green-700">
-                  <i data-lucide="check-circle" class="w-4 h-4"></i>
-                  <span class="text-xs font-medium">Disetujui</span>
-                </td>
-                <td class="px-4 py-3">
-                  <div class="flex items-center justify-center gap-3">
-                    <button title="Lihat" class="text-blue-500 hover:text-blue-700">
-                      <i data-lucide="eye" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Download" class="text-green-500 hover:text-green-700">
-                      <i data-lucide="download" class="w-5 h-5"></i>
-                    </button>
-                    <button title="Hapus" class="text-red-500 hover:text-red-700">
-                      <i data-lucide="trash-2" class="w-5 h-5"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <!-- Kuota Siswa -->
+          <div class="bg-gray-50 flex items-center px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Kuota Siswa</p>
+            <div class="w-2/3 flex items-center gap-4">
+              <p id="kuota" class="text-gray-800" contenteditable="false">2 / 5</p>
+              <button class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 flex items-center">
+                <i data-lucide="plus" class="w-4 h-4 mr-1"></i> Tambah Siswa
+              </button>
+            </div>
+          </div>
+
+          <!-- Siswa PKL -->
+          <div class="bg-white flex items-center px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Siswa PKL</p>
+            <div class="w-2/3 space-y-2">
+              <div class="flex justify-between items-center bg-white px-3 py-2 rounded-md">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
+                  <p class="text-gray-800" contenteditable="false">Feg - XII TKJ 1</p>
+                </div>
+                <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+              </div>
+              <div class="flex justify-between items-center bg-white px-3 py-2 rounded-md">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
+                  <p class="text-gray-800" contenteditable="false">Qone - XII TKJ 2</p>
+                </div>
+                <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pembimbing -->
+          <div class="bg-gray-50 flex items-center px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Pembimbing</p>
+            <div class="w-2/3">
+              <div class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md">
+                <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+                <p class="text-gray-800" contenteditable="false">Bu Lestari - Pembimbing Lapangan</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deskripsi -->
+          <div class="bg-white flex items-start px-6 py-4">
+            <p class="font-medium text-gray-700 w-1/3">Deskripsi</p>
+            <p id="deskripsi" class="text-gray-800 w-2/3 text-justify" contenteditable="false">
+              PT Telkom Indonesia merupakan perusahaan BUMN yang bergerak di bidang telekomunikasi dan teknologi digital.
+              Siswa akan mempelajari infrastruktur jaringan, manajemen data, serta penerapan sistem digital perusahaan.
+            </p>
+          </div>
         </div>
       </main>
     </div>
 
     <script>
       lucide.createIcons();
+
+      // Edit inline toggle
+      const editBtn = document.getElementById("editBtn");
+      editBtn.addEventListener("click", () => {
+        const editableEls = document.querySelectorAll("[contenteditable]");
+        editableEls.forEach((el) => {
+          const current = el.getAttribute("contenteditable") === "true";
+          el.setAttribute("contenteditable", !current);
+          el.classList.toggle("bg-yellow-50", !current);
+        });
+        editBtn.querySelector("i").classList.toggle("text-green-600");
+      });
     </script>
   </body>
 </html>

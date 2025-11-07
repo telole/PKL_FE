@@ -7,7 +7,9 @@ import MainDashboard from './views/MainDashboard';
 import Studentmanagement from './views/StudentManagement';
 import StoreStudent from './composables/cards/StudentManagementCard/StoreStudentDataPanel';
 import Document from './views/StudentDocument';
+import Location from './views/Location';
 import { RequireAuth } from './composables/hooks/useAuth';
+import Teachermanagement from './views/Teachermanagement';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
     <Route path='/admin/management' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Studentmanagement/></RequireAuth>}></Route>
     <Route path='/admin/Student' element={<RequireAuth roles={["teacher","admin","supervisor"]}><StoreStudent/></RequireAuth>}></Route>
     <Route path='/admin/document' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Document/></RequireAuth>}></Route>
+    <Route path='/admin/teacher' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Teachermanagement/></RequireAuth>}></Route>
+    <Route path='/admin/locations' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Location/></RequireAuth>}></Route>
    </Routes>
    </BrowserRouter>
 

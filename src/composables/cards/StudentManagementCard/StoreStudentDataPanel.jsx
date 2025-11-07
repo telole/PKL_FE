@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Search, UserPlus, Users } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import { useSetError } from "../../hooks/SetError";
 
 export default function StoreStudent() {
   const navigate = useNavigate();
+  const { setError, setValidationErrors } = useSetError();
 
   const [form, setForm] = useState({
     username: "",
@@ -40,9 +42,10 @@ export default function StoreStudent() {
       navigate("/admin/management"); 
     } catch (err) {
       if (err.response?.status === 422) {
-        setErrors(err.response.data.errors || {});
+        const validationErrors = err.response.data.errors || {};
+        setErrors(setValidationErrors(validationErrors));
       } else {
-        alert("Terjadi kesalahan server. Silakan coba lagi.");
+        setError(err, "Terjadi kesalahan server. Silakan coba lagi.");
       }
     } finally {
       setLoading(false);

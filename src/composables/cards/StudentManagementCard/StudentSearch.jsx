@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Search, Plus } from "lucide-react";
-import { api } from "../hooks/hooks";
+import { api } from "../../hooks/UseApi";
+import { useSetError } from "../../hooks/SetError";
 
 export default function StudentSearch() {
   const axios = api();
+  const { setError } = useSetError();
   const [students, setStudents] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
@@ -16,7 +18,7 @@ export default function StudentSearch() {
         setStudents(data);
         setFiltered(data);
       })
-      .catch((err) => console.error("Gagal mengambil data siswa:", err));
+      .catch((err) => setError(err, "Gagal mengambil data siswa."));
   }, []);
 
   const handleSearch = (e) => {

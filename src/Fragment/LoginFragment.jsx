@@ -1,13 +1,13 @@
     import { useState } from "react";
     import { api } from "../composables/hooks/UseApi";
     import { useNavigate } from "react-router-dom";
+    import { useSetError } from "../composables/hooks/SetError";
 
     function Login() {
         const axios = api();
         const [data, setData] = useState({email: "", password   : ""});
-        const [Alert, setAlert] = useState(null);
         const navigate = useNavigate();
-
+        const { setError } = useSetError();
         function HandleChange(e) {
             setData({...data, [e.target.name]: e.target.value})
         }
@@ -33,7 +33,7 @@
                 // navigate('/dashboard')
             }).catch((err) => {
                 console.log(err);
-                setAlert(err.response.data.message || "error")
+                setError(err, "Gagal melakukan login. Periksa email dan password Anda.");
             });
         }
 
@@ -88,12 +88,11 @@
                     >
                         Masuk
                     </button>
+                    {/* <p class="text-red-500 text-sm mt-2">{setError}</p> */}
                 </form>
             </div>
         </main>
-
             </>
-
         )
     }
 

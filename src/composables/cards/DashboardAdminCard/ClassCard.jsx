@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { api } from "../../hooks/UseApi";
+import { useSetError } from "../../hooks/SetError";
 
 export default function ClassCard() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const axios = api();
+  const { setError } = useSetError();
 
   useEffect(() => {
     axios
@@ -14,7 +16,7 @@ export default function ClassCard() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        setError(err, "Gagal memuat data kelas.");
         setLoading(false);
       });
   }, []); 

@@ -1,17 +1,19 @@
 import { Briefcase, Zap } from "lucide-react";
 import { api } from "../../hooks/UseApi";
 import { useEffect, useState } from "react";
+import { useSetError } from "../../hooks/SetError";
 
 export default function  MentorsCard() {
     const axios = api();
     const [data, setData] = useState([]);
+    const { setError } = useSetError();
 
     useEffect(() => {
 
       axios.get('supervisors').then((res) => {
           setData(res.data.data)
       }).catch((err) => {
-          console.log(err.response)
+          setError(err, "Gagal memuat data pembimbing.");
       });
     }, [])
 
