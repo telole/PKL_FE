@@ -7,7 +7,7 @@
   export default function StudentTableManagement() {
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
-    const [searchKeyword, setSearchKeyword] = useState(""); // state untuk keyword
+    const [searchKeyword, setSearchKeyword] = useState("");
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const axios = api();

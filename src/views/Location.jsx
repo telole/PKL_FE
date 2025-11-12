@@ -53,6 +53,7 @@ export default function Location() {
   const [loadingData, setLoadingData] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [mapReady, setMapReady] = useState(false);
+  const [geocodingLocations, setGeocodingLocations] = useState(new Set());
 
   const mapRef = useRef(null);
   const markersRef = useRef([]);
@@ -226,7 +227,7 @@ export default function Location() {
 
   const hasAnyCoordinates = locations.some(hasCoordinates);
 
-  const geocodeAddress = useCallback(async (query) => {
+  const geocodeWithNominatim = useCallback(async (query) => {
     if (!query) return null;
 
     try {
@@ -234,7 +235,12 @@ export default function Location() {
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
           query
         )}&format=json&addressdetails=0&limit=1`,
-        { headers: { Accept: "application/json" } }
+        { 
+          headers: { 
+            Accept: "application/json",
+            "User-Agent": "PKL-Location-Mapper/1.0"
+          } 
+        }
       );
 
       if (!response.ok) {
@@ -250,11 +256,18 @@ export default function Location() {
         }
       }
     } catch (err) {
-      console.warn("Geocoding gagal untuk", query, err);
+      console.warn("Nominatim geocoding gagal untuk", query, err);
     }
 
     return null;
   }, []);
+
+  const geocodeAddress = useCallback(async (query) => {
+    if (!query) return null;
+
+    // Menggunakan Nominatim untuk geocoding (gratis, tidak perlu API key)
+    return await geocodeWithNominatim(query);
+  }, [geocodeWithNominatim]);
 
   const geocodeLocations = useCallback(
     async (list) => {
@@ -274,7 +287,7 @@ export default function Location() {
           parseCoordinate(location.geo_lng);
 
         if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && (location.address || location.name)) {
-          const query = [location.name, location.address].filter(Boolean).join(", ");
+          const query = location.address || location.name;
           const cached = geocodeCacheRef.current[query];
 
           if (cached) {
@@ -340,12 +353,17 @@ export default function Location() {
 
         if (needsGeocode) {
           try {
+            // Geocoding batch untuk semua lokasi yang membutuhkan
             const enriched = await geocodeLocations(normalized);
             if (!cancelled) {
               setLocations(enriched);
             }
           } catch (err) {
             console.warn("Geocoding batch gagal", err);
+            // Tetap set lokasi meskipun geocoding gagal
+            if (!cancelled) {
+              setLocations(normalized);
+            }
           }
         }
       }
@@ -383,13 +401,96 @@ export default function Location() {
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank", "noopener,noreferrer");
   }
 
-  function handleGoToLocation(location) {
-    if (!hasCoordinates(location)) {
-      setErrorRef.current("Koordinat belum tersedia pada peta. Lokasi tidak dapat ditampilkan di peta.");
+  const geocodeSingleLocation = useCallback(async (location) => {
+    if (!location || hasCoordinates(location)) {
+      return location;
+    }
+
+    if (!location.address && !location.name) {
+      return location;
+    }
+
+    const query = location.address || location.name;
+    const cacheKey = query;
+
+    // Cek cache dulu
+    const cached = geocodeCacheRef.current[cacheKey];
+    if (cached) {
+      return {
+        ...location,
+        lat: cached.lat,
+        lng: cached.lng,
+      };
+    }
+
+    // Tandai sedang geocoding
+    setGeocodingLocations((prev) => new Set(prev).add(location.id));
+
+    try {
+      const coords = await geocodeAddress(query);
+      
+      if (coords) {
+        // Simpan ke cache
+        geocodeCacheRef.current[cacheKey] = coords;
+        sessionStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(geocodeCacheRef.current));
+
+        // Update lokasi di state
+        setLocations((prevLocations) =>
+          prevLocations.map((loc) =>
+            loc.id === location.id
+              ? { ...loc, lat: coords.lat, lng: coords.lng }
+              : loc
+          )
+        );
+
+        return {
+          ...location,
+          lat: coords.lat,
+          lng: coords.lng,
+        };
+      } else {
+        setErrorRef.current(
+          `Tidak dapat menemukan koordinat untuk "${query}". Pastikan alamat lengkap dan valid.`
+        );
+      }
+    } catch (err) {
+      console.warn("Geocoding gagal untuk lokasi:", location.id, err);
+      setErrorRef.current(
+        `Gagal mencari koordinat untuk "${query}". Silakan coba lagi nanti atau gunakan Google Maps.`
+      );
+    } finally {
+      setGeocodingLocations((prev) => {
+        const next = new Set(prev);
+        next.delete(location.id);
+        return next;
+      });
+    }
+
+    return location;
+  }, [geocodeAddress]);
+
+  async function handleGoToLocation(location) {
+    // Jika sudah punya koordinat, langsung tampilkan
+    if (hasCoordinates(location)) {
+      goToLocation(location);
       return;
     }
 
-    goToLocation(location);
+    // Jika belum punya koordinat, coba geocoding dulu
+    if (location.address || location.name) {
+      const enriched = await geocodeSingleLocation(location);
+      if (hasCoordinates(enriched)) {
+        goToLocation(enriched);
+      } else {
+        setErrorRef.current(
+          "Koordinat belum tersedia di peta / tidak dapat menemukan lokasi. Silakan gunakan tombol Google Maps untuk membuka alamat di Google Maps."
+        );
+      }
+    } else {
+      setErrorRef.current(
+        "Alamat tidak tersedia. Tidak dapat mencari koordinat lokasi."
+      );
+    }
   }
 
   return (
@@ -521,11 +622,24 @@ export default function Location() {
                           <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                             <button
                               onClick={() => handleGoToLocation(location)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-xs flex items-center gap-2 transition-colors"
+                              disabled={geocodingLocations.has(location.id)}
+                              className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md text-xs flex items-center gap-2 transition-colors"
                               title="Tampilkan pada peta"
                             >
-                              <Navigation className="w-4 h-4" />
-                              Go to Location
+                              {geocodingLocations.has(location.id) ? (
+                                <>
+                                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                  </svg>
+                                  Mencari koordinat...
+                                </>
+                              ) : (
+                                <>
+                                  <Navigation className="w-4 h-4" />
+                                  Go to Location
+                                </>
+                              )}
                             </button>
                             <button
                               onClick={() => openInGoogleMaps(location)}
@@ -536,9 +650,9 @@ export default function Location() {
                               Google Maps
                             </button>
                           </div>
-                          {!hasCoordinates(location) && (
+                          {!hasCoordinates(location) && !geocodingLocations.has(location.id) && (
                             <p className="mt-2 text-[11px] text-gray-500 text-center sm:text-left">
-                              Koordinat dicari otomatis melalui alamat.
+                              Koordinat akan dicari otomatis melalui alamat saat diklik.
                             </p>
                           )}
                         </td>

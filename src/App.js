@@ -10,6 +10,7 @@ import Document from './views/StudentDocument';
 import Location from './views/Location';
 import { RequireAuth } from './composables/hooks/useAuth';
 import Teachermanagement from './views/Teachermanagement';
+import CompaniesPartner from './views/CompaniesPartner';
 
 function App() {
   return (
@@ -22,9 +23,9 @@ function App() {
     <Route path='/admin/document' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Document/></RequireAuth>}></Route>
     <Route path='/admin/teacher' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Teachermanagement/></RequireAuth>}></Route>
     <Route path='/admin/locations' element={<RequireAuth roles={["teacher","admin","supervisor"]}><Location/></RequireAuth>}></Route>
+    <Route path='/admin/partners' element={<RequireAuth roles={["teacher","admin","supervisor"]}><CompaniesPartner/></RequireAuth>}></Route>
    </Routes>
-   </BrowserRouter>
-
+   </BrowserRouter
   );
 }
 
