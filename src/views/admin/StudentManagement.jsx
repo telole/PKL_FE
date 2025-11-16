@@ -1,7 +1,7 @@
 
-import Sidebar from "../composables/nav/Sidebar";
-import MainPanel from "../composables/nav/MainPanel";
-import StudentTableManagement from "../composables/cards/StudentManagementCard/DataTableCardStudent";
+import Sidebar from "../../composables/nav/Sidebar";
+import MainPanel from "../../composables/nav/MainPanel";
+import StudentTableManagement from "../../composables/cards/StudentManagementCard/DataTableCardStudent";
 
 export default function Studentmanagement() {
   return (

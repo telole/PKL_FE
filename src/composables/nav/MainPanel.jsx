@@ -1,9 +1,6 @@
 export default function MainPanel() {
     const username = localStorage.getItem("name");
 
-
-
-
     return (
         // <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-blue-700 text-white shadow">

@@ -1,5 +1,5 @@
 // src/views/MainDashboard.js
-import DashboardAdmin from "../Fragment/DashboardAdmin";
+import DashboardAdmin from "../../Fragment/DashboardAdmin";
 
 function MainDashboard() {
   return (

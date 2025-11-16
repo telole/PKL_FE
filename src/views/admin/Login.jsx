@@ -1,4 +1,4 @@
-import Login from "../Fragment/LoginFragment"
+import Login from "../../Fragment/LoginFragment"
 
 function LoginPage() {
 

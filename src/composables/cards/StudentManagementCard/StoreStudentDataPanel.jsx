@@ -5,6 +5,7 @@ import { Search, UserPlus, Users } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 import { useSetError } from "../../hooks/SetError";
+import { useSetLoading } from "../../hooks/setLoading";
 
 export default function StoreStudent() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function StoreStudent() {
   });
 
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useSetLoading(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

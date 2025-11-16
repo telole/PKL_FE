@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Building2, Search, Plus, Check, Edit3, Trash2, Briefcase, Phone, Mail, Globe, Users, Loader2 } from "lucide-react";
-import MainPanel from "../composables/nav/MainPanel";
-import Sidebar from "../composables/nav/Sidebar";
-import { api } from "../composables/hooks/UseApi";
-import { useSetError } from "../composables/hooks/SetError";
+import MainPanel from "../../composables/nav/MainPanel";
+import Sidebar from "../../composables/nav/Sidebar";
+import { api } from "../../composables/hooks/UseApi";
+import { useSetError } from "../../composables/hooks/SetError";
+import { useSetLoading } from "../../composables/hooks/setLoading";
 
 const COMPANIES_ENDPOINT = "companie";
 
@@ -12,7 +13,7 @@ export default function CompaniesPartner() {
   const { setError } = useSetError();
 
   const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useSetLoading(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -48,7 +49,7 @@ export default function CompaniesPartner() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [axios, setError, setLoading]);
 
   const filteredCompanies = useMemo(() => {
     if (!searchQuery.trim()) return companies;

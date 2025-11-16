@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExternalLink, MapPin, Navigation, Search } from "lucide-react";
-import MainPanel from "../composables/nav/MainPanel";
-import Sidebar from "../composables/nav/Sidebar";
-import { api } from "../composables/hooks/UseApi";
-import { useSetError } from "../composables/hooks/SetError";
+import MainPanel from "../../composables/nav/MainPanel";
+import Sidebar from "../../composables/nav/Sidebar";
+import { api } from "../../composables/hooks/UseApi";
+import { useSetError } from "../../composables/hooks/SetError";
+import { useSetLoading } from "../../composables/hooks/setLoading";
 
 const DEFAULT_CENTER = [-6.2088, 106.8456];
 const DEFAULT_ZOOM = 12;
@@ -50,7 +51,7 @@ export default function Location() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [locations, setLocations] = useState([]);
-  const [loadingData, setLoadingData] = useState(true);
+  const [loadingData, setLoadingData] = useSetLoading(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [mapReady, setMapReady] = useState(false);
   const [geocodingLocations, setGeocodingLocations] = useState(new Set());
@@ -374,7 +375,7 @@ export default function Location() {
     return () => {
       cancelled = true;
     };
-  }, [axios, geocodeLocations]);
+  }, [axios, geocodeLocations, setLoadingData]);
 
   function goToLocation(location) {
     if (!mapRef.current || !hasCoordinates(location)) {

@@ -3,21 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistem PKL - Lokasi PKL</title>
+    <title>Sistem PKL - Statistik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
   <body class="bg-gray-100 font-sans">
-
     <!-- Header -->
     <header class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow">
       <div class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
-        </svg>
-        <h1 class="text-lg font-semibold">Sistem PKL - Dashboard Admin</h1>
+        <i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i>
+        <h1 class="text-lg font-semibold">Sistem PKL - Statistik</h1>
       </div>
       <p class="text-sm">Selamat datang, <span class="font-medium">Administrator</span></p>
     </header>
@@ -28,22 +24,34 @@
         <nav class="p-4">
           <p class="text-gray-400 uppercase text-xs mb-2">Administrasi</p>
           <ul class="space-y-2 mb-6">
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Dashboard Admin</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="users" class="w-4 h-4 mr-2"></i> Manajemen Siswa</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Dokumen Siswa</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="user-check" class="w-4 h-4 mr-2"></i> Pembimbing PKL</a></li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 mr-2"></i> Dashboard Admin
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="users" class="w-4 h-4 mr-2"></i> Manajemen Siswa
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Dokumen Siswa
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center px-3 py-2 rounded-md hover:bg-blue-100 text-gray-700">
+                <i data-lucide="user-check" class="w-4 h-4 mr-2"></i> Pembimbing PKL
+              </a>
+            </li>
           </ul>
 
           <p class="text-gray-400 uppercase text-xs mb-2">Monitoring</p>
           <ul class="space-y-2 mb-6">
-            <li>
-              <a href="#" class="flex items-center px-3 py-2 rounded-md bg-blue-100 text-blue-700 font-medium">
-                <i data-lucide="map-pin" class="w-4 h-4 mr-2 text-blue-600"></i> Lokasi PKL
-              </a>
-            </li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="file-bar-chart" class="w-4 h-4 mr-2"></i> Laporan Siswa</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Statistik</a></li>
-            <li><a href="#" class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"><i data-lucide="building-2" class="w-4 h-4 mr-2"></i> Perusahaan Partner</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Lokasi PKL</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="file-bar-chart" class="w-4 h-4 mr-2"></i> Laporan Siswa</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-md"><i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Statistik</a></li>
+            <li><a href="#" class="flex items-center px-3 py-2 hover:bg-blue-100 rounded-md text-gray-700"><i data-lucide="building-2" class="w-4 h-4 mr-2"></i> Perusahaan Partner</a></li>
           </ul>
 
           <a href="#" class="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 rounded-md font-medium">
@@ -52,102 +60,188 @@
         </nav>
       </aside>
 
-      <!-- Main Content -->
-      <main class="flex-1 p-8">
+      <!-- Konten Utama -->
+      <main class="flex-1 p-6">
         <div class="mb-6">
-            <div class="flex items-center gap-3">
-                <div class="flex flex-col items-center justify-center">
-                    <i data-lucide="map-pin" class="w-10 h-10 text-blue-600"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Manajemen Lokasi PKL</h2>
-                    <p class="text-gray-500 text-sm">Detail lokasi, kontak, pembimbing, dan siswa di tempat PKL</p>
-                </div>
-            </div>
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <i data-lucide="bar-chart-2" class="w-6 h-6 text-blue-600 mr-2"></i>
+            Statistik PKL
+          </h2>
+          <p class="text-gray-600 mt-1">
+            Analisis dan visualisasi data program praktek kerja lapangan
+          </p>
         </div>
 
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-          <!-- Header -->
-          <div class="flex justify-between items-start p-6">
-            <div class="flex items-center gap-3">
-              <i data-lucide="building-2" class="w-10 h-10 text-blue-600"></i>
+        <!-- Tabs & Filter -->
+        <div class="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
+          <div class="flex flex-wrap gap-2 border-b pb-3">
+            <button
+              class="px-4 py-2 rounded-md text-sm font-medium bg-blue-100 text-blue-700"
+            >
+              Ringkasan
+            </button>
+            <button
+              class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+            >
+              Siswa
+            </button>
+            <button
+              class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+            >
+              Laporan
+            </button>
+            <button
+              class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100"
+            >
+              Lokasi
+            </button>
+          </div>
+
+          <div class="flex items-center">
+            <select
+              class="block rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option>Bulan Ini</option>
+              <option>Minggu Ini</option>
+              <option>3 Bulan Terakhir</option>
+              <option>Tahun Ini</option>
+            </select>
+            <button
+              class="ml-2 p-2 text-gray-600 hover:text-blue-600"
+              title="Unduh Laporan"
+            >
+              <i data-lucide="download" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Statistik Ringkas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-all">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-blue-100 mr-3">
+                <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+              </div>
               <div>
-                <h3 id="namaPerusahaan" class="text-lg font-semibold text-gray-800" contenteditable="false">PT Telkom Indonesia</h3>
-                <p id="deskripsiPerusahaan" class="text-gray-500 text-sm" contenteditable="false">Perusahaan telekomunikasi terbesar di Indonesia</p>
+                <p class="text-xs text-gray-500">Total Siswa PKL</p>
+                <p class="text-xl font-bold">92</p>
               </div>
             </div>
-            <div class="flex gap-4 items-center">
-              <button id="editBtn" class="text-blue-600 hover:text-blue-800"><i data-lucide="edit-3" class="w-6 h-6"></i></button>
-              <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-6 h-6"></i></button>
+            <div class="mt-2 flex justify-between text-xs text-gray-500">
+              <span>Aktif: 74</span>
+              <span>Selesai: 18</span>
             </div>
           </div>
 
-          <!-- Alamat -->
-          <div class="bg-gray-50 flex items-center px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Alamat</p>
-            <p id="alamat" class="text-gray-800 w-2/3" contenteditable="false">Jl. Jendral Sudirman No.123, Jakarta</p>
-          </div>
-
-          <!-- Kontak -->
-          <div class="bg-white flex items-start px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Kontak</p>
-            <div class="w-2/3 text-gray-800 space-y-1">
-              <p contenteditable="false" id="email">Email: info@telkom.co.id</p>
-              <p contenteditable="false" id="telepon">Telepon: (021) 808080</p>
-              <p contenteditable="false" id="website">Website: www.telkom.co.id</p>
+          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-all">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-green-100 mr-3">
+                <i data-lucide="file-text" class="w-5 h-5 text-green-600"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Total Laporan</p>
+                <p class="text-xl font-bold">412</p>
+              </div>
+            </div>
+            <div class="mt-2 flex justify-between text-xs text-gray-500">
+              <span>Disetujui: 376</span>
+              <span>Tertunda: 28</span>
+              <span>Ditolak: 8</span>
             </div>
           </div>
 
-          <!-- Kuota Siswa -->
-          <div class="bg-gray-50 flex items-center px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Kuota Siswa</p>
-            <div class="w-2/3 flex items-center gap-4">
-              <p id="kuota" class="text-gray-800" contenteditable="false">2 / 5</p>
-              <button class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 flex items-center">
-                <i data-lucide="plus" class="w-4 h-4 mr-1"></i> Tambah Siswa
-              </button>
+          <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-all">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-purple-100 mr-3">
+                <i data-lucide="map-pin" class="w-5 h-5 text-purple-600"></i>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Lokasi & Pembimbing</p>
+                <p class="text-xl font-bold">24</p>
+              </div>
+            </div>
+            <div class="mt-2 flex justify-between text-xs text-gray-500">
+              <span>Lokasi: 24</span>
+              <span>Pembimbing: 12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagian Tren & Distribusi -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Tren Laporan Bulanan -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="border-b border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+              <h2 class="font-medium text-gray-700 flex items-center">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 mr-2 text-blue-600"></i>
+                Tren Laporan Bulanan
+              </h2>
+            </div>
+            <div class="p-6 h-72 flex items-end justify-between text-center">
+              <div>
+                <div class="w-6 bg-blue-500 h-20 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Jan</p>
+              </div>
+              <div>
+                <div class="w-6 bg-blue-500 h-24 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Feb</p>
+              </div>
+              <div>
+                <div class="w-6 bg-blue-500 h-28 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Mar</p>
+              </div>
+              <div>
+                <div class="w-6 bg-blue-500 h-32 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Apr</p>
+              </div>
+              <div>
+                <div class="w-6 bg-blue-500 h-36 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Mei</p>
+              </div>
+              <div>
+                <div class="w-6 bg-blue-500 h-40 rounded-t mx-auto"></div>
+                <p class="text-xs mt-1 text-gray-600">Jun</p>
+              </div>
             </div>
           </div>
 
-          <!-- Siswa PKL -->
-          <div class="bg-white flex items-center px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Siswa PKL</p>
-            <div class="w-2/3 space-y-2">
-              <div class="flex justify-between items-center bg-white px-3 py-2 rounded-md">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
-                  <p class="text-gray-800" contenteditable="false">Feg - XII TKJ 1</p>
+          <!-- Distribusi Siswa -->
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="border-b border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+              <h2 class="font-medium text-gray-700 flex items-center">
+                <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-blue-600"></i>
+                Distribusi Spesialisasi Siswa
+              </h2>
+            </div>
+            <div class="p-4 space-y-3">
+              <div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span>Web Development</span>
+                  <span>15 siswa</span>
                 </div>
-                <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-              </div>
-              <div class="flex justify-between items-center bg-white px-3 py-2 rounded-md">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="user" class="w-5 h-5 text-blue-600"></i>
-                  <p class="text-gray-800" contenteditable="false">Qone - XII TKJ 2</p>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full w-2/6"></div>
                 </div>
-                <button class="text-red-600 hover:text-red-800"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span>Network Configuration</span>
+                  <span>18 siswa</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full w-1/3"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span>Database & Backend</span>
+                  <span>12 siswa</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full w-1/4"></div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Pembimbing -->
-          <div class="bg-gray-50 flex items-center px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Pembimbing</p>
-            <div class="w-2/3">
-              <div class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md">
-                <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
-                <p class="text-gray-800" contenteditable="false">Bu Lestari - Pembimbing Lapangan</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Deskripsi -->
-          <div class="bg-white flex items-start px-6 py-4">
-            <p class="font-medium text-gray-700 w-1/3">Deskripsi</p>
-            <p id="deskripsi" class="text-gray-800 w-2/3 text-justify" contenteditable="false">
-              PT Telkom Indonesia merupakan perusahaan BUMN yang bergerak di bidang telekomunikasi dan teknologi digital.
-              Siswa akan mempelajari infrastruktur jaringan, manajemen data, serta penerapan sistem digital perusahaan.
-            </p>
           </div>
         </div>
       </main>
@@ -155,18 +249,6 @@
 
     <script>
       lucide.createIcons();
-
-      // Edit inline toggle
-      const editBtn = document.getElementById("editBtn");
-      editBtn.addEventListener("click", () => {
-        const editableEls = document.querySelectorAll("[contenteditable]");
-        editableEls.forEach((el) => {
-          const current = el.getAttribute("contenteditable") === "true";
-          el.setAttribute("contenteditable", !current);
-          el.classList.toggle("bg-yellow-50", !current);
-        });
-        editBtn.querySelector("i").classList.toggle("text-green-600");
-      });
     </script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import MainDocument from "../Fragment/DocumentMainView"
+import MainDocument from "../../Fragment/DocumentMainView"
 
 export default function Document() {
 

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { api } from "../../hooks/UseApi";
 import { useSetError } from "../../hooks/SetError";
+import { useSetLoading } from "../../hooks/setLoading";
 
 export default function ClassCard() {
   const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useSetLoading(true);
   const axios = api();
   const { setError } = useSetError();
 

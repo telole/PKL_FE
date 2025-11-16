@@ -1,7 +1,7 @@
 
-import TeacherView from "../Fragment/TeacherView";
-import MainPanel from "../composables/nav/MainPanel";
-import Sidebar from "../composables/nav/Sidebar";
+import TeacherView from "../../Fragment/TeacherView";
+import MainPanel from "../../composables/nav/MainPanel";
+import Sidebar from "../../composables/nav/Sidebar";
 
 export default function Teachermanagement() { 
     return (
