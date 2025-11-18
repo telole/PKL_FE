@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Search, Plus } from "lucide-react";
 import { api } from "../../hooks/UseApi";
 import { useSetError } from "../../hooks/SetError";
+import { useToast } from "../../hooks/useToast";
 
 export default function StudentSearch() {
   const axios = api();
   const { setError } = useSetError();
+  const { showNotif } = useToast();
   const [students, setStudents] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
@@ -36,7 +38,7 @@ export default function StudentSearch() {
   };
 
   const handleAddStudent = () => {
-    alert("Fitur tambah siswa belum diimplementasikan.");
+    showNotif("warning", "Fitur tambah siswa belum diimplementasikan.");
   };
 
   return (

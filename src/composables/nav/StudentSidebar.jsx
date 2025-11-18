@@ -9,6 +9,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../hooks/UseApi";
 import { useSetError } from "../hooks/SetError";
+import { useConfirmModal } from "../hooks/useConfirmModal";
 
 export default function StudentSidebar() {
   const location = useLocation();
@@ -16,35 +17,44 @@ export default function StudentSidebar() {
   const axios = api();
   const token = localStorage.getItem("token");
   const { setError } = useSetError();
+  const { confirm, ConfirmModal } = useConfirmModal();
 
   function isActive(path) {
     return location.pathname === path;
   }
 
   function handleLogout() {
-    const confirmLogout = window.confirm("Logout sekarang?");
-    if (!confirmLogout) return;
-
-    axios
-      .post(
-        "/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("role");
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err, "Gagal melakukan logout.");
-      });
+    confirm(
+      "Apakah Anda yakin ingin logout?",
+      () => {
+        axios
+          .post(
+            "/logout",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+            localStorage.removeItem("token");
+            localStorage.removeItem("name");
+            localStorage.removeItem("role");
+            navigate("/");
+          })
+          .catch((err) => {
+            setError(err, "Gagal melakukan logout.");
+          });
+      },
+      {
+        title: "Konfirmasi Logout",
+        confirmText: "Logout",
+        cancelText: "Batal",
+        variant: "warning",
+      }
+    );
   }
 
   return (
@@ -131,6 +141,7 @@ export default function StudentSidebar() {
           Keluar
         </button>
       </nav>
+      <ConfirmModal />
     </aside>
   );
 }

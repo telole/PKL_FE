@@ -375,7 +375,7 @@ export default function Location() {
     return () => {
       cancelled = true;
     };
-  }, [axios, geocodeLocations, setLoadingData]);
+  }, []);
 
   function goToLocation(location) {
     if (!mapRef.current || !hasCoordinates(location)) {

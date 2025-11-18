@@ -49,7 +49,7 @@ export default function CompaniesPartner() {
     return () => {
       cancelled = true;
     };
-  }, [axios, setError, setLoading]);
+  }, []);
 
   const filteredCompanies = useMemo(() => {
     if (!searchQuery.trim()) return companies;

@@ -12,6 +12,7 @@ import {
 import { api } from "../hooks/UseApi";
 import { useSetError } from "../hooks/SetError";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useConfirmModal } from "../hooks/useConfirmModal";
 
 function Sidebar() {
   const axios = api();
@@ -19,31 +20,40 @@ function Sidebar() {
   const location = useLocation();
   const token = localStorage.getItem("token");
   const { setError } = useSetError();
+  const { confirm, ConfirmModal } = useConfirmModal();
 
   function handleLogout() {
-    const confirmLogout = window.confirm("Logout sekarang?");
-    if (!confirmLogout) return;
-
-    axios
-      .post(
-        "/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("role");
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err, "Gagal melakukan logout.");
-      });
+    confirm(
+      "Apakah Anda yakin ingin logout?",
+      () => {
+        axios
+          .post(
+            "/logout",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+            localStorage.removeItem("token");
+            localStorage.removeItem("name");
+            localStorage.removeItem("role");
+            navigate("/");
+          })
+          .catch((err) => {
+            setError(err, "Gagal melakukan logout.");
+          });
+      },
+      {
+        title: "Konfirmasi Logout",
+        confirmText: "Logout",
+        cancelText: "Batal",
+        variant: "warning",
+      }
+    );
   }
 
   // Helper function untuk menentukan menu aktif
@@ -173,6 +183,7 @@ function Sidebar() {
           Keluar
         </button>
       </nav>
+      <ConfirmModal />
     </aside>
   );
 }

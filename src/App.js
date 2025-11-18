@@ -10,11 +10,13 @@ import Document from "./views/admin/StudentDocument";
 import Location from "./views/admin/Location";
 import Teachermanagement from "./views/admin/Teachermanagement";
 import CompaniesPartner from "./views/admin/CompaniesPartner";
+import Statistics from "./views/admin/Statistics";
 import StudentDashboard from "./views/student/Dashboard";
 import LocationStudent from "./views/student/LocationStudent";
 import ActivityStudent from "./views/student/ActivityStudent";
 import DocumentStudent from "./views/student/DocumentStudent";
 import CreateReports from "./views/student/CreateReports";
+import Progress from "./views/student/Progress";
 import { RequireAuth } from "./composables/hooks/useAuth";
 
 function App() {
@@ -59,6 +61,14 @@ function App() {
           element={
             <RequireAuth roles={["student"]}>
               <CreateReports />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/home/progress"
+          element={
+            <RequireAuth roles={["student"]}>
+              <Progress />
             </RequireAuth>
           }
         />
@@ -115,6 +125,14 @@ function App() {
           element={
             <RequireAuth roles={["teacher", "admin", "supervisor"]}>
               <CompaniesPartner />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <RequireAuth roles={["teacher", "admin", "supervisor"]}>
+              <Statistics />
             </RequireAuth>
           }
         />

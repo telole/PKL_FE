@@ -5,7 +5,7 @@ import StudentTableManagement from "../../composables/cards/StudentManagementCar
 
 export default function Studentmanagement() {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex flex-col font-sans">
       <MainPanel />
       <div className="flex flex-1">
         <Sidebar />

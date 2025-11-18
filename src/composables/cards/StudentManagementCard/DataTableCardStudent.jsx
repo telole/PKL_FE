@@ -94,7 +94,6 @@
                 <th className="py-3 px-4 text-left">Status</th>
                 <th className="py-3 px-4 text-left">Spesialisasi</th>
                 <th className="py-3 px-4 text-left">Pembimbing</th>
-                <th className="py-3 px-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y">

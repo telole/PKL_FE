@@ -3,6 +3,7 @@ import { api } from "../composables/hooks/UseApi";
 import { useToast } from "../composables/hooks/useToast";
 import { useSetError } from "../composables/hooks/SetError";
 import { useOpenModal } from "../composables/hooks/useOpenModal";
+import { useConfirmModal } from "../composables/hooks/useConfirmModal";
 import MainPanel from "../composables/nav/MainPanel";
 import Sidebar from "../composables/nav/Sidebar";
 import {
@@ -18,6 +19,7 @@ import {
 export default function MainDocument() {
   const [data, setData] = useState([]);
   const { isOpen: isModalOpen, data: selectedDoc, open, close, setData: setSelectedDoc } = useOpenModal();
+  const { confirm, ConfirmModal } = useConfirmModal();
   const axios = api();
   const { showNotif } = useToast();
   const { setError } = useSetError();
@@ -53,16 +55,25 @@ export default function MainDocument() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Yakin ingin menghapus dokumen ini?")) {
-      try {
-        await axios.delete(`reportsa/${id}`);
-        fetchData();
-        showNotif("success", "Dokumen berhasil dihapus.");
-    } catch (err) {
-      setError(err, "Gagal menghapus dokumen.");
-    }
-    }
+  const handleDelete = (id) => {
+    confirm(
+      "Yakin ingin menghapus dokumen ini? Tindakan ini tidak dapat dibatalkan.",
+      async () => {
+        try {
+          await axios.delete(`reportsa/${id}`);
+          fetchData();
+          showNotif("success", "Dokumen berhasil dihapus.");
+        } catch (err) {
+          setError(err, "Gagal menghapus dokumen.");
+        }
+      },
+      {
+        title: "Konfirmasi Hapus",
+        confirmText: "Hapus",
+        cancelText: "Batal",
+        variant: "danger",
+      }
+    );
   };
 
   // --- Update status ---
@@ -289,6 +300,7 @@ export default function MainDocument() {
           </div>
         </div>
       )}
+      <ConfirmModal />
     </>
   );
 }
