@@ -17,6 +17,8 @@ import ActivityStudent from "./views/student/ActivityStudent";
 import DocumentStudent from "./views/student/DocumentStudent";
 import CreateReports from "./views/student/CreateReports";
 import Progress from "./views/student/Progress";
+import PresenceStudent from "./views/student/PresenceStudent";
+import PresenceAdmin from "./views/admin/PresenceAdmin";
 import { RequireAuth } from "./composables/hooks/useAuth";
 
 function App() {
@@ -73,6 +75,14 @@ function App() {
           }
         />
         <Route
+          path="/home/presence"
+          element={
+            <RequireAuth roles={["student"]}>
+              <PresenceStudent />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/admin"
           element={
             <RequireAuth roles={["teacher", "admin", "supervisor"]}>
@@ -125,6 +135,14 @@ function App() {
           element={
             <RequireAuth roles={["teacher", "admin", "supervisor"]}>
               <CompaniesPartner />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/presences"
+          element={
+            <RequireAuth roles={["teacher", "admin", "supervisor"]}>
+              <PresenceAdmin />
             </RequireAuth>
           }
         />

@@ -280,10 +280,10 @@ export default function CompaniesPartner() {
                   <p className="text-gray-600 font-medium">
                     Total: {company.supervisors?.length || 0} pembimbing, {company.kuota || 0} slot kuota
                   </p>
-                  <button className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm flex items-center gap-1 hover:bg-blue-700 transition-colors">
-                    <Plus className="w-4 h-4" />
-                    Tambah Posisi
-                  </button>
+                    {/* <button className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm flex items-center gap-1 hover:bg-blue-700 transition-colors">
+                      <Plus className="w-4 h-4" />
+                      Tambah Posisi
+                    </button> */}
                 </div>
               </div>
             ))

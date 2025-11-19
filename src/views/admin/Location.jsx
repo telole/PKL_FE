@@ -196,10 +196,26 @@ export default function Location() {
       const [lat, lng] = [validLocations[0].lat, validLocations[0].lng];
       mapRef.current.setView([lat, lng], 15, { animate: true });
     } else {
-      const bounds = window.L.latLngBounds(
-        validLocations.map((location) => [location.lat, location.lng])
-      );
-      mapRef.current.fitBounds(bounds, { padding: [48, 48] });
+      const coordinatePairs = validLocations
+        .map((location) => [location.lat, location.lng])
+        .filter(
+          ([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng)
+        );
+
+      if (!coordinatePairs.length) {
+        return;
+      }
+
+      try {
+        const bounds = window.L.latLngBounds(coordinatePairs);
+        if (bounds.isValid()) {
+          mapRef.current.fitBounds(bounds, { padding: [48, 48] });
+        }
+      } catch (err) {
+        console.warn("leaflet fitBounds aborted (invalid bounds)", err, {
+          coordinatePairs,
+        });
+      }
     }
   }, [locations]);
 

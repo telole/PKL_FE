@@ -4,6 +4,7 @@ import {
   ClipboardList,
   FileText,
   BarChart3,
+  Calendar,
   LogOut,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -116,6 +117,19 @@ export default function StudentSidebar() {
             >
               <FileText className="w-4 h-4 mr-2" />
               Laporan Harian
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/home/presence"
+              className={`flex items-center px-3 py-2 rounded-md ${
+                isActive("/home/presence")
+                  ? "bg-blue-100 text-blue-700 font-medium"
+                  : "hover:bg-blue-50 text-gray-700"
+              }`}
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              Presensi PKL
             </Link>
           </li>
           <li>

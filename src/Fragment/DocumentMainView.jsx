@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { api } from "../composables/hooks/UseApi";
 import { useToast } from "../composables/hooks/useToast";
 import { useSetError } from "../composables/hooks/SetError";
@@ -14,24 +14,26 @@ import {
   Trash2,
   X,
   Pencil,
+  Loader2,
 } from "lucide-react";
 
 export default function MainDocument() {
   const [data, setData] = useState([]);
+  const [downloadingId, setDownloadingId] = useState(null);
   const { isOpen: isModalOpen, data: selectedDoc, open, close, setData: setSelectedDoc } = useOpenModal();
   const { confirm, ConfirmModal } = useConfirmModal();
-  const axios = api();
+  const axios = useMemo(() => api(), []);
   const { showNotif } = useToast();
   const { setError } = useSetError();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await axios.get(`reportsa?_=${Date.now()}`);
       setData(res.data.data || []);
     } catch (err) {
       setError(err, "Gagal memuat data dokumen.");
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -39,19 +41,94 @@ export default function MainDocument() {
 
 
   const handleDownload = async (doc) => {
+    // Check if file_path exists
+    if (!doc.file_path) {
+      setError(null, "File tidak tersedia untuk dokumen ini. Dokumen mungkin tidak memiliki lampiran.");
+      return;
+    }
+
+    setDownloadingId(doc.id);
+    
+    // Extract filename from file_path
+    const pathParts = doc.file_path.split("/");
+    const fileFromPath = pathParts[pathParts.length - 1];
+    let filename = fileFromPath || `${doc.title || "dokumen"}.pdf`;
+    
     try {
-      const res = await axios.get(`reportsa/download/${doc.id}`, {
+      let res;
+      
+      res = await axios.get(`reports/${doc.id}/download`, {
         responseType: "blob",
       });
-      const url = window.URL.createObjectURL(new Blob([res.data]));
+
+      const contentType = res.headers["content-type"] || res.headers["Content-Type"] || "application/octet-stream";
+      
+      // Determine filename from response or file_path
+      let downloadFilename = filename; // Use filename extracted from file_path earlier
+      const contentDisposition = res.headers["content-disposition"] || res.headers["Content-Disposition"];
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        if (filenameMatch && filenameMatch[1]) {
+          downloadFilename = filenameMatch[1].replace(/['"]/g, "");
+          try {
+            downloadFilename = decodeURIComponent(downloadFilename);
+          } catch (e) {
+            // If decode fails, use as is
+          }
+        }
+      } else if (doc.file_path) {
+        if (!downloadFilename.includes(".")) {
+          const extensionMap = {
+            "application/pdf": "pdf",
+            "application/msword": "doc",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+            "text/plain": "txt",
+          };
+          const ext = extensionMap[contentType] || downloadFilename.split(".").pop() || "pdf";
+          downloadFilename = `${doc.title || "dokumen"}.${ext}`;
+        }
+      } else {
+        // Fallback: determine extension from content type
+        const extensionMap = {
+          "application/pdf": "pdf",
+          "application/msword": "doc",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+          "text/plain": "txt",
+        };
+        const ext = extensionMap[contentType] || "pdf";
+        downloadFilename = `${doc.title || "dokumen"}.${ext}`;
+      }
+
+      const blob = new Blob([res.data], { type: contentType });
+      const url = window.URL.createObjectURL(blob);
+      
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${doc.title || "dokumen"}.pdf`;
+      a.download = downloadFilename;
+      document.body.appendChild(a);
       a.click();
+      
+      document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      
       showNotif("success", "Dokumen berhasil diunduh.");
     } catch (err) {
-      setError(err, "Gagal mengunduh dokumen.");
+      console.error("Download error:", err);
+      if (err.response?.status === 404) {
+        const errorMessage = err.response?.data?.message || "File tidak ditemukan di server.";
+        setError(err, errorMessage);
+      } else if (err.response?.status === 403) {
+        const errorMessage = err.response?.data?.message || "Anda tidak memiliki izin untuk mengunduh file ini.";
+        setError(err, errorMessage);
+      } else if (err.response?.status === 500) {
+        setError(err, "Terjadi kesalahan server. File mungkin tidak tersedia.");
+      } else if (err.response?.data?.message) {
+        setError(err, err.response.data.message);
+      } else {
+        setError(err, "Gagal mengunduh dokumen. Pastikan file tersedia di server.");
+      }
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -206,9 +283,14 @@ export default function MainDocument() {
                               <button
                                 onClick={() => handleDownload(d)}
                                 title="Download"
-                                className="text-green-500 hover:text-green-700"
+                                disabled={downloadingId === d.id}
+                                className="text-green-500 hover:text-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                <Download className="w-5 h-5" />
+                                {downloadingId === d.id ? (
+                                  <Loader2 className="w-5 h-5 animate-spin" />
+                                ) : (
+                                  <Download className="w-5 h-5" />
+                                )}
                               </button>
                               <button
                                 onClick={() => handleDelete(d.id)}
@@ -236,7 +318,6 @@ export default function MainDocument() {
         </div>
       </div>
 
-      {/* --- Modal Edit Status --- */}
       {isModalOpen && selectedDoc && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">

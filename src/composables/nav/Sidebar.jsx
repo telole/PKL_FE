@@ -7,6 +7,7 @@ import {
   FileBarChart,
   BarChart,
   Building2,
+  CalendarDays,
   LogOut
 } from "lucide-react";
 import { api } from "../hooks/UseApi";
@@ -154,6 +155,23 @@ function Sidebar() {
             >
               <BarChart className="w-4 h-4 mr-2" />
               Statistik
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/admin/presences"
+              className={`flex items-center px-3 py-2 rounded-md ${
+                isActive("/admin/presences")
+                  ? "bg-blue-100 text-blue-700 font-medium"
+                  : "hover:bg-blue-100 text-gray-700"
+              }`}
+            >
+              <CalendarDays
+                className={`w-4 h-4 mr-2 ${
+                  isActive("/admin/presences") ? "text-blue-600" : ""
+                }`}
+              />
+              Presensi Siswa
             </Link>
           </li>
           <li>

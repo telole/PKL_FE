@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { MapPin, Search, Loader2 } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,94 +14,244 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-// Default position untuk Semarang (karena sebagian besar perusahaan di Semarang)
-const DEFAULT_CENTER = [-7.0051, 110.4381];
+const DEFAULT_CENTER = [-6.2088, 106.8456];
 const DEFAULT_ZOOM = 12;
+const GEOCODE_CACHE_KEY = "companyGeocodeCache_v1_student";
+const COMPANIES_ENDPOINT = "companie";
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function parseCoordinate(value) {
+  if (value === undefined || value === null) return null;
+  const numeric = Number.parseFloat(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function normalizeLocation(raw) {
+  if (!raw || typeof raw !== "object") {
+    return raw;
+  }
+
+  const lat =
+    parseCoordinate(raw.lat) ||
+    parseCoordinate(raw.latitude) ||
+    parseCoordinate(raw.geo_lat);
+  const lng =
+    parseCoordinate(raw.lng) ||
+    parseCoordinate(raw.longitude) ||
+    parseCoordinate(raw.geo_lng);
+
+  return {
+    ...raw,
+    lat: Number.isFinite(lat) ? lat : null,
+    lng: Number.isFinite(lng) ? lng : null,
+  };
+}
+
+function hasCoordinates(location) {
+  return Number.isFinite(location?.lat) && Number.isFinite(location?.lng);
+}
 
 export default function LocationStudent() {
+  const axios = useMemo(() => api(), []);
+  const { setError } = useSetError();
+  const setErrorRef = useRef(setError);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useSetLoading(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const setLoadingRef = useRef(setLoading);
+  const axiosRef = useRef(axios);
+  const geocodeLocationsRef = useRef(null);
+
+  useEffect(() => {
+    setLoadingRef.current = setLoading;
+    axiosRef.current = axios;
+  }, [setLoading, axios]);
+
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const userInteractedRef = useRef(false);
   const initialBoundsSetRef = useRef(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("");
-  const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useSetLoading(true);
-  const axios = useMemo(() => api(), []);
-  const { setError } = useSetError();
+  const geocodeCacheRef = useRef({});
 
   useEffect(() => {
-    const fetchCompanies = async () => {
+    setErrorRef.current = setError;
+  }, [setError]);
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem(GEOCODE_CACHE_KEY);
+    if (cached) {
       try {
-        setLoading(true);
-        const response = await axios.get("companie");
-        const companies = response.data.data || [];
-        
-        const transformedCompanies = companies.map((company) => {
-          return {
-            id: company.id,
-            name: company.name,
-            address: company.address,
-            type: company.sector || "Lainnya",
-            slots: company.kuota || 0,
-            contact: company.phone || "-",
-            contactPerson: company.contact_person || "-",
-            email: company.email || "-",
-            website: company.website || "-",
-            specialist: company.specialist || "-",
-            description: company.description || "-",
-            position: DEFAULT_CENTER, // Use default initially
-          };
-        });
-
-        setLocations(transformedCompanies);
-
-        const geocodeCompanies = async () => {
-          const geocodedCompanies = await Promise.all(
-            companies.map(async (company, index) => {
-              let position = DEFAULT_CENTER;
-              try {
-                // Sequential geocoding to avoid rate limiting
-                if (index > 0) {
-                  await new Promise((resolve) => setTimeout(resolve, 500));
-                }
-                const encodedAddress = encodeURIComponent(company.address);
-                const geocodeResponse = await fetch(
-                  `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`,
-                  {
-                    headers: {
-                      "User-Agent": "PKL-Student-App",
-                    },
-                  }
-                );
-                const geocodeData = await geocodeResponse.json();
-                if (geocodeData && geocodeData.length > 0) {
-                  position = [parseFloat(geocodeData[0].lat), parseFloat(geocodeData[0].lon)];
-                }
-              } catch (geocodeError) {
-                // Silently fail, use default position
-              }
-              return {
-                ...transformedCompanies[index],
-                position,
-              };
-            })
-          );
-          setLocations(geocodedCompanies);
-        };
-
-        // Start geocoding in background (non-blocking)
-        geocodeCompanies();
+        geocodeCacheRef.current = JSON.parse(cached);
       } catch (err) {
-        setError(err, "Gagal memuat data perusahaan.");
-        setLocations([]);
+        console.warn("Gagal membaca cache geocode", err);
+        geocodeCacheRef.current = {};
+      }
+    }
+  }, []);
+
+  const geocodeWithNominatim = useCallback(async (query) => {
+    if (!query) return null;
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          query
+        )}&format=json&addressdetails=0&limit=1`,
+        { 
+          headers: { 
+            Accept: "application/json",
+            "User-Agent": "PKL-Student-Location/1.0"
+          } 
+        }
+      );
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const lat = parseCoordinate(data[0].lat);
+        const lng = parseCoordinate(data[0].lon);
+        if (Number.isFinite(lat) && Number.isFinite(lng)) {
+          return { lat, lng };
+        }
+      }
+    } catch (err) {
+      console.warn("Nominatim geocoding gagal untuk", query, err);
+    }
+
+    return null;
+  }, []);
+
+  const geocodeAddress = useCallback(async (query) => {
+    if (!query) return null;
+    return await geocodeWithNominatim(query);
+  }, [geocodeWithNominatim]);
+
+  const geocodeLocations = useCallback(
+    async (list) => {
+      if (!Array.isArray(list) || !list.length) {
+        return [];
+      }
+
+      const results = [];
+      for (const location of list) {
+        let lat =
+          parseCoordinate(location.lat) ||
+          parseCoordinate(location.latitude) ||
+          parseCoordinate(location.geo_lat);
+        let lng =
+          parseCoordinate(location.lng) ||
+          parseCoordinate(location.longitude) ||
+          parseCoordinate(location.geo_lng);
+
+        if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && (location.address || location.name)) {
+          const query = location.address || location.name;
+          const cached = geocodeCacheRef.current[query];
+
+          if (cached) {
+            lat = cached.lat;
+            lng = cached.lng;
+          } else {
+            const coords = await geocodeAddress(query);
+            if (coords) {
+              lat = coords.lat;
+              lng = coords.lng;
+              geocodeCacheRef.current[query] = coords;
+              sessionStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(geocodeCacheRef.current));
+            }
+            await delay(400);
+          }
+        }
+
+        results.push({
+          ...location,
+          lat: Number.isFinite(lat) ? lat : null,
+          lng: Number.isFinite(lng) ? lng : null,
+        });
+      }
+
+      return results;
+    },
+    [geocodeAddress]
+  );
+
+  useEffect(() => {
+    geocodeLocationsRef.current = geocodeLocations;
+  }, [geocodeLocations]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchLocations = async () => {
+      setLoadingRef.current(true);
+      setErrorMessage(null);
+
+      let normalized = [];
+
+      try {
+        const response = await axiosRef.current.get(COMPANIES_ENDPOINT);
+        
+        // Handle different response structures
+        let list = [];
+        if (Array.isArray(response?.data?.data)) {
+          list = response.data.data;
+        } else if (Array.isArray(response?.data)) {
+          list = response.data;
+        } else if (response?.data?.companies && Array.isArray(response.data.companies)) {
+          list = response.data.companies;
+        }
+        
+        normalized = list.map((item) => normalizeLocation(item));
+
+        if (!cancelled) {
+          setLocations(normalized);
+        }
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+        if (!cancelled) {
+          const fallbackMessage = err?.response?.data?.message || err?.message || "Gagal memuat data lokasi PKL.";
+          setErrorMessage(fallbackMessage);
+        }
+        setErrorRef.current(err, "Gagal memuat data lokasi PKL.");
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoadingRef.current(false);
+        }
+      }
+
+      if (!cancelled && normalized.length) {
+        const needsGeocode = normalized.some(
+          (location) => !hasCoordinates(location) && (location.address || location.name)
+        );
+
+        if (needsGeocode) {
+          try {
+            const enriched = await geocodeLocationsRef.current(normalized);
+            if (!cancelled) {
+              setLocations(enriched);
+            }
+          } catch (err) {
+            console.warn("Geocoding batch gagal", err);
+            if (!cancelled) {
+              setLocations(normalized);
+            }
+          }
+        }
       }
     };
 
-    fetchCompanies();
+    fetchLocations();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Initialize map
@@ -199,24 +349,22 @@ export default function LocationStudent() {
     }
     markersRef.current = [];
 
-    // Add new markers
+    // Add new markers - hanya yang punya koordinat
+    const validLocations = locations.filter(hasCoordinates);
+    
     try {
-      locations.forEach((loc) => {
-        if (!loc.position || !Array.isArray(loc.position) || loc.position.length !== 2) {
-          return; // Skip invalid positions
-        }
-
+      validLocations.forEach((loc) => {
         try {
-          const marker = L.marker(loc.position)
+          const marker = L.marker([loc.lat, loc.lng])
             .addTo(map)
             .bindPopup(`
               <div style="min-width: 200px;">
-                <h3 style="font-weight: bold; margin-bottom: 8px;">${loc.name}</h3>
-                <p style="margin: 4px 0; font-size: 13px;">${loc.address}</p>
-                <p style="margin: 4px 0; font-size: 13px;"><strong>Bidang:</strong> ${loc.type}</p>
-                <p style="margin: 4px 0; font-size: 13px;"><strong>Spesialisasi:</strong> ${loc.specialist}</p>
-                <p style="margin: 4px 0; font-size: 13px;"><strong>Kuota:</strong> ${loc.slots} siswa</p>
-                <p style="margin: 4px 0; font-size: 13px;"><strong>Kontak:</strong> ${loc.contactPerson} (${loc.contact})</p>
+                <h3 style="font-weight: bold; margin-bottom: 8px;">${loc.name || "Nama tidak tersedia"}</h3>
+                <p style="margin: 4px 0; font-size: 13px;">${loc.address || "Alamat tidak tersedia"}</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Bidang:</strong> ${loc.sector || "-"}</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Spesialisasi:</strong> ${loc.specialist || "-"}</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Kuota:</strong> ${loc.kuota || 0} siswa</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Kontak:</strong> ${loc.contact_person || "-"} ${loc.phone ? `(${loc.phone})` : ""}</p>
               </div>
             `);
           markersRef.current.push(marker);
@@ -228,9 +376,9 @@ export default function LocationStudent() {
       console.error("Error processing markers:", e);
     }
 
-    
+    // Fit bounds untuk semua marker yang valid
     if (
-      locations.length > 0 &&
+      validLocations.length > 0 &&
       !userInteractedRef.current &&
       !initialBoundsSetRef.current &&
       map &&
@@ -238,13 +386,12 @@ export default function LocationStudent() {
       map._container._leaflet_id
     ) {
       try {
-        const validPositions = locations
-          .map((loc) => loc.position)
-          .filter((pos) => pos && Array.isArray(pos) && pos.length === 2);
+        const coordinatePairs = validLocations
+          .map((loc) => [loc.lat, loc.lng])
+          .filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
         
-        if (validPositions.length > 0) {
-          const bounds = L.latLngBounds(validPositions);
-          // Use setTimeout to ensure map is fully ready
+        if (coordinatePairs.length > 0) {
+          const bounds = L.latLngBounds(coordinatePairs);
           setTimeout(() => {
             if (map && map._container && map._container._leaflet_id) {
               try {
@@ -263,20 +410,33 @@ export default function LocationStudent() {
   }, [locations, loading]);
 
   const uniqueSectors = useMemo(() => {
-    const sectors = [...new Set(locations.map((loc) => loc.type).filter(Boolean))];
+    const sectors = [...new Set(locations.map((loc) => loc.sector).filter(Boolean))];
     return sectors.sort();
   }, [locations]);
 
-  const filteredLocations = locations.filter((loc) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      loc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      loc.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      loc.specialist.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === "" || loc.type === filterType;
-    return matchesSearch && matchesType;
-  });
+  const filteredLocations = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (!normalizedQuery && !filterType) return locations;
+
+    return locations.filter((loc) => {
+      const matchesSearch = !normalizedQuery || [
+        loc.name,
+        loc.address,
+        loc.sector,
+        loc.specialist,
+        loc.contact_person,
+        loc.phone,
+        loc.email,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedQuery);
+      
+      const matchesType = !filterType || loc.sector === filterType;
+      return matchesSearch && matchesType;
+    });
+  }, [locations, searchQuery, filterType]);
 
   return (
     <StudentLayout>
@@ -286,6 +446,13 @@ export default function LocationStudent() {
         <h1 className="text-2xl font-bold text-gray-800">Lokasi PKL</h1>
         <p className="text-gray-600 mt-1">Temukan tempat praktek kerja lapangan yang sesuai</p>
       </div>
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {errorMessage}
+        </div>
+      )}
 
       {/* Search + Filter */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -376,21 +543,47 @@ export default function LocationStudent() {
               ) : (
                 filteredLocations.map((loc) => (
                   <tr key={loc.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{loc.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{loc.address}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      <div className="flex flex-col">
+                        <span>{loc.name || "-"}</span>
+                        {loc.website && (
+                          <a
+                            href={loc.website.startsWith("http") ? loc.website : `https://${loc.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline break-all mt-1"
+                          >
+                            {loc.website.replace(/^https?:\/\//, "")}
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{loc.address || "-"}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       <div>
-                        <div>{loc.type}</div>
+                        <div>{loc.sector || "-"}</div>
                         {loc.specialist && (
                           <div className="text-xs text-gray-400 mt-1">{loc.specialist}</div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{loc.slots} siswa</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {Number.isFinite(loc.kuota) ? `${loc.kuota} siswa` : "-"}
+                    </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       <div>
-                        <div>{loc.contactPerson}</div>
-                        <div className="text-xs text-gray-400">{loc.contact}</div>
+                        {loc.contact_person && (
+                          <span className="font-medium text-gray-900">{loc.contact_person}</span>
+                        )}
+                        {loc.phone && <span className="ml-1">{loc.phone}</span>}
+                        {loc.email && (
+                          <a
+                            href={`mailto:${loc.email}`}
+                            className="text-blue-600 hover:underline break-all block text-xs mt-1"
+                          >
+                            {loc.email}
+                          </a>
+                        )}
                       </div>
                     </td>
                   </tr>

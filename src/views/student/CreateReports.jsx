@@ -241,7 +241,7 @@ export default function CreateReports() {
                 {/* CONTENT */}
                 <div>
                   <label className="block font-medium mb-1 text-gray-700">
-                    Isi Laporan
+                    Deskripsi Laporan
                   </label>
                   <textarea
                     id="content"
@@ -249,7 +249,7 @@ export default function CreateReports() {
                     rows={6}
                     value={formData.content}
                     onChange={handleChange}
-                    placeholder="Tuliskan detail kegiatan hari ini..."
+                    placeholder="Contoh : Laporan Akhir"
                     className={`w-full border rounded-lg p-2 ${
                       errors.content ? "border-red-300" : "border-gray-300"
                     }`}
